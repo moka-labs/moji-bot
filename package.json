@@ -1,10 +1,14 @@
 {
   "name": "discord-emoji-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Resend the emoji as a larger image!",
   "main": "index.js",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "discord",
+    "bot",
+    "emoji"
+  ],
+  "author": "Byeon Seongun <kamyu1537@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
