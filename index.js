@@ -23,13 +23,16 @@ client.on('message', msg => {
     if (animated) url += "gif"
     else url += "png"
     url += "?v=1"
-  } else if (msg.content.length === 2) {
+  } else {
     const entities = parse(msg.content, { assetType: 'png' });
     if (entities.length === 1) {
-      url = entities[0].url;
+      const entity = entities[0];
+      const content = msg.content.replace(new RegExp(entity.text), '');
+      if (content.length === 0) {
+        url = entity.url;
+      }
     }
   }
-
   if (url !== '') {
     const embed = new Discord.MessageEmbed();
     embed.setImage(url);
