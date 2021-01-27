@@ -60,7 +60,11 @@ client.on('message', async (msg) => {
   if (url !== '') {
     const embed = new Discord.MessageEmbed();
     embed.setImage(url);
-    embed.setAuthor(msg.author.tag, msg.author.displayAvatarURL());
+    embed.setAuthor(
+      msg.author.tag,
+      msg.author.displayAvatarURL(),
+      `https://discordapp.com/users/${msg.author.id}`
+    );
 
     if (footer !== '') {
       embed.setFooter(footer);
