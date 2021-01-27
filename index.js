@@ -8,7 +8,7 @@ client.on('ready', () => {
   client.user.setActivity({ name: 'big emotes' }).then();
 });
 
-client.on('message', msg => {
+client.on('message', async (msg) => {
   if (msg.guild == null) return;
   if (msg.author.bot) return;
   if (msg.author === client.user) return;
@@ -26,7 +26,6 @@ client.on('message', msg => {
           dm.send(embed).then();
         });
     }
-
     return;
   }
 
@@ -34,13 +33,20 @@ client.on('message', msg => {
   const match = regex.exec(msg.content);
 
   let url = '';
+  let footer = '';
+
   if (match) {
     const animated = match[1] !== undefined;
+    const emoji = match[3];
 
     url = `https://cdn.discordapp.com/emojis/${match[3]}.`;
     if (animated) url += 'gif';
     else url += 'png';
     url += '?v=1';
+
+    await client.rest.request('get', `/emojis/${emoji}/guild`, { route: [] })
+      .then(res => { footer = res.name })
+      .catch(() => { footer = 'PRIVATE SERVER' });
   } else {
     const entities = parse(msg.content, { assetType: 'png' });
     if (entities.length === 1) {
@@ -55,6 +61,10 @@ client.on('message', msg => {
     const embed = new Discord.MessageEmbed();
     embed.setImage(url);
     embed.setAuthor(msg.author.tag, msg.author.displayAvatarURL());
+
+    if (footer !== '') {
+      embed.setFooter(footer);
+    }
 
     // Embed Color
     const member = msg.guild.member(msg.author);
