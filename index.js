@@ -71,7 +71,6 @@ client.on('messageCreate', async (msg) => {
 
       if (footer) embed.footer = { text: footer }
 
-      let color;
       if (msg.member.roles.length > 0) {
         const guild = msg.member.guild;
 
@@ -83,8 +82,8 @@ client.on('messageCreate', async (msg) => {
           else return curr.position > prev.position ? curr : prev;
         });
 
-        if (role && color) {
-          embed.color = color;
+        if (role) {
+          embed.color = role.color;
         }
       }
 
