@@ -88,8 +88,10 @@ client.on('messageCreate', async (msg) => {
         }
       }
 
-      await client.deleteMessage(msg.channel.id, msg.id);
-      await client.createMessage(msg.channel.id, { embed })
+      if (process.env.NODE_ENV === 'production') {
+        await client.deleteMessage(msg.channel.id, msg.id);
+        await client.createMessage(msg.channel.id, { embed })
+      }
     }
   } catch (e) {
     console.error(e);
