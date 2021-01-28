@@ -75,16 +75,17 @@ client.on('messageCreate', async (msg) => {
       if (msg.member.roles.length > 0) {
         const guild = msg.member.guild;
 
-        let position = Number.MAX_VALUE;
-        for (let role of msg.member.roles) {
-          role = guild.roles.get(role);
-          if (position > role.position && role.color !== 0) {
-            position = role.position;
-            color = role.color;
-          }
-        }
+        let roles = msg.member.roles.map(role => guild.roles.get(role));
+        roles = roles.filter(role => role.color !== 0);
+        const role = roles.reduce((prev, curr) => {
+          if (!prev) return curr;
+          if (curr.position === prev.position) return prev.id > curr.id ? prev : curr;
+          else return curr.position > prev.position ? curr : prev;
+        });
 
-        if (color) embed.color = color;
+        if (role && color) {
+          embed.color = color;
+        }
       }
 
       await client.deleteMessage(msg.channel.id, msg.id);
