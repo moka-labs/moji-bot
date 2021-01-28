@@ -95,38 +95,3 @@ client.on('messageCreate', async (msg) => {
 });
 
 client.connect();
-
-//     const entities = parse(msg.content, { assetType: 'png' });
-//     if (entities.length === 1) {
-//       const entity = entities[0];
-//       const content = msg.content.replace(new RegExp(entity.text), '');
-//       if (content.length === 0) {
-//         url = entity.url;
-//       }
-//     }
-//   }
-//   if (url !== '') {
-//     const embed = new Discord.MessageEmbed();
-//     embed.setImage(url);
-//     embed.setAuthor(
-//       msg.author.tag,
-//       msg.author.displayAvatarURL(),
-//       `https://discordapp.com/users/${msg.author.id}`
-//     );
-//
-//     if (footer !== '') {
-//       embed.setFooter(footer);
-//     }
-//
-//     // Embed Color
-//     const member = msg.guild.member(msg.author);
-//     if (member !== null) {
-//       embed.setColor(msg.guild.member(msg.author).displayColor);
-//     }
-//
-//     msg.channel.send(embed).then();
-//     msg.delete().then();
-//   }
-// });
-//
-// client.login(process.env.BOT_TOKEN);
