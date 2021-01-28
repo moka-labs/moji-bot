@@ -87,6 +87,7 @@ client.on('messageCreate', async (msg) => {
         if (color) embed.color = color;
       }
 
+      await client.deleteMessage(msg.channel.id, msg.id);
       await client.createMessage(msg.channel.id, { embed })
     }
   } catch (e) {
