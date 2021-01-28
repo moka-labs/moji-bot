@@ -7,8 +7,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "eris": "^0.14.0",
     "twemoji-parser": "^13.0.0"
   }
 }
