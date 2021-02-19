@@ -5,6 +5,7 @@ const { parse } = require('twemoji-parser');
 const client = new Eris.Client(process.env.BOT_TOKEN);
 
 client.on('ready', async () => {
+  process.send('ready');
   client.editStatus('online', { name: 'big emotes', type: 0 });
 });
 
@@ -76,15 +77,17 @@ client.on('messageCreate', async (msg) => {
 
         let roles = msg.member.roles.map(role => guild.roles.get(role));
         roles = roles.filter(role => role.color !== 0);
-        const role = roles.reduce((prev, curr) => {
-          if (!prev) return curr;
-          if (curr.position === prev.position) return prev.id > curr.id ? prev : curr;
-          else return curr.position > prev.position ? curr : prev;
-        });
+        if (roles.length > 0) {
+	  const role = roles.reduce((prev, curr) => {
+            if (!prev) return curr;
+            if (curr.position === prev.position) return prev.id > curr.id ? prev : curr;
+            else return curr.position > prev.position ? curr : prev;
+          });
 
-        if (role) {
-          embed.color = role.color;
-        }
+          if (role) {
+            embed.color = role.color;
+          }
+	}
       }
 
       if (process.env.NODE_ENV === 'production') {
@@ -98,3 +101,7 @@ client.on('messageCreate', async (msg) => {
 });
 
 client.connect();
+process.on('SIGINT', function() {
+  client.disconnect();
+  process.exit(0);
+});
