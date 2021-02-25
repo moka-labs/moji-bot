@@ -1,5 +1,7 @@
 # Discord Emoji Bot 🙂
-Resend the emoji to its original size.
+Resend the emoji to its original size.<br/>
+<img src="misc/image.gif?raw=true" alt="" />
+
 #### [Bot Invite](https://discord.com/oauth2/authorize?client_id=803818878178033708&scope=bot&permissions=11264)
 
 ## 🔧 Environments
@@ -29,3 +31,10 @@ CMD ["node", "index.js"]
 docker build -t discord-emoji-bot:latest .
 docker run -d --name discord-emoji-bot -e BOT_TOKEN=<BOT_TOKEN> discord-emoji-bot:latest
 ```
+
+## 📦 Dependencies
+| package name   | version |
+| -------------- | ------- |
+| dotenv         | ^8.2.0  |
+| eris           | ^0.14.0 |
+| twemoji-parser | ^13.0.0 |
