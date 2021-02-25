@@ -4,6 +4,7 @@ const { parse } = require('twemoji-parser');
 
 const client = new Eris.Client(process.env.BOT_TOKEN);
 
+process.send = process.send || function() {};
 client.on('ready', async () => {
   process.send('ready');
   client.editStatus('online', { name: 'big emotes', type: 0 });
@@ -16,7 +17,7 @@ client.on('messageCreate', async (msg) => {
 
   try {
     // 봇을 호출하였을 경우 초대링크를 DM 으로 보내줍니다.
-    if (msg.content === client.user.mention) {
+    if (msg.content === `<@!${client.user.id}>`) {
       await msg.delete();
       const channel = await client.getDMChannel(msg.author.id);
       await client.createMessage(channel.id, {
