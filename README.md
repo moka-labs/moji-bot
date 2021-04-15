@@ -1,5 +1,5 @@
 # Discord Emoji Bot 🙂
-Resend the emoji to its original size.<br/>
+Resend the emoji to original size!<br/>
 <img src="misc/image.gif?raw=true" alt="" />
 
 #### [Bot Invite](https://discord.com/oauth2/authorize?client_id=803818878178033708&scope=bot&permissions=11264)
