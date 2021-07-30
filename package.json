@@ -10,6 +10,11 @@
   ],
   "author": "Byeon Seongun <kamyu1537@gmail.com>",
   "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "serve": "node dist/index.js",
+    "start": "npm run serve"
+  },
   "dependencies": {
     "dotenv": "^8.2.0",
     "eris": "^0.14.0",
