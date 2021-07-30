@@ -99,8 +99,16 @@ client.on('messageCreate', async (msg) => {
 
       // 개발중일 경우 메세지를 보내지않습니다.
       if (process.env.NODE_ENV === 'production') {
+        const content = { embed };
+        if (msg.messageReference) {
+          content.message_reference = {
+            message_id: msg.messageReference.messageID,
+            channel_id: msg.messageReference.channelID,
+            guild_id: msg.messageReference.guildID,
+          };
+        }
         await client.deleteMessage(msg.channel.id, msg.id);
-        await client.createMessage(msg.channel.id, { embed });
+        await client.createMessage(msg.channel.id, content);
       }
     }
   } catch (e) {
