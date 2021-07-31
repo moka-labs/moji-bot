@@ -104,7 +104,7 @@ client.on('messageCreate', async (msg) => {
       if (process.env.NODE_ENV === 'production') {
         const content = { embed };
         if (msg.messageReference) {
-          content.message_reference = {
+          (content as any).message_reference = {
             message_id: msg.messageReference.messageID,
             channel_id: msg.messageReference.channelID,
             guild_id: msg.messageReference.guildID,
