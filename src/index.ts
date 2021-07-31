@@ -1,16 +1,17 @@
-require('dotenv').config();
-const Eris = require('eris');
-const { parse } = require('twemoji-parser');
+import 'dotenv/config';
+import Eris from 'eris';
+import { parse } from 'twemoji-parser';
 
-const client = new Eris.Client(process.env.BOT_TOKEN);
+const client = new Eris.Client(process.env.BOT_TOKEN ?? '');
 
-process.send = process.send || function() {};
 client.on('ready', async () => {
-  process.send('ready');
+  process.send?.('ready');
   client.editStatus('online', { name: 'big emotes', type: 0 });
 });
 
 client.on('messageCreate', async (msg) => {
+  if (msg == null) return;
+  if (msg.member == null) return;
   if (msg.guildID === undefined) return;
   if (msg.author.bot) return;
   if (msg.author === client.user) return;
@@ -34,8 +35,8 @@ client.on('messageCreate', async (msg) => {
     const regex = new RegExp('^<(a)?:(\\w+):(\\d{18})>$', 'g');
     const match = regex.exec(msg.content);
 
-    let url;
-    let footer;
+    let url: string | undefined;
+    let footer: string | undefined;
 
     if (match) {
       const animated = match[1] !== undefined;
@@ -48,7 +49,7 @@ client.on('messageCreate', async (msg) => {
 
       await client.requestHandler.request('GET', `/emojis/${emoji}/guild`, true)
         .then(res => {
-          footer = res.name;
+          footer = res.name as string;
         })
         .catch(() => {
           footer = 'PRIVATE SERVER';
@@ -66,7 +67,7 @@ client.on('messageCreate', async (msg) => {
 
     // URL 이 있을 경우
     if (url) {
-      const embed = {
+      const embed: Omit<Eris.Embed, 'type'> & Partial<Pick<Eris.Embed, 'type'>> = {
         author: {
           name: `${msg.author.username}#${msg.author.discriminator}`,
           icon_url: msg.author.avatarURL,
@@ -80,8 +81,10 @@ client.on('messageCreate', async (msg) => {
       if (msg.member.roles.length > 0) {
         const guild = msg.member.guild;
 
-        let roles = msg.member.roles.map(role => guild.roles.get(role));
-        roles = roles.filter(role => role.color !== 0);
+        const roles = msg.member.roles
+          .map(role => guild.roles.get(role))
+          .filter((role): role is Eris.Role => role != null)
+          .filter(role => role.color !== 0);
 
         // 배열이 1개 이상일 경우 작동
         if (roles.length > 0) {
@@ -110,6 +113,6 @@ client.on('messageCreate', async (msg) => {
 
 client.connect();
 process.on('SIGINT', function () {
-  client.disconnect();
+  client.disconnect({});
   process.exit(0);
 });
