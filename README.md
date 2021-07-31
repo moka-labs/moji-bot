@@ -13,8 +13,9 @@ Resend the emoji to original size!<br/>
 
 ```shell
 env BOT_TOKEN=<Discord Bot Token>
-yarn install --frozen-lockfile
-npm run index.js
+npm ci
+npm run build
+npm run start
 ```
 
 ## 🐋 Docker
