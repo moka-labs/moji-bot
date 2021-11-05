@@ -48,10 +48,9 @@ client.on('messageCreate', async (msg) => {
       url += '?v=1';
 
       await client.requestHandler.request('GET', `/emojis/${emoji}/guild`, true)
-        .then(res => {
+        .then((res: any) => {
           footer = res.name as string;
-        })
-        .catch(() => {
+        }).catch(() => {
           footer = 'PRIVATE SERVER';
         });
     } else {
@@ -120,7 +119,7 @@ client.on('messageCreate', async (msg) => {
 });
 
 client.connect();
-process.on('SIGINT', function () {
+process.on('SIGINT', function() {
   client.disconnect({});
   process.exit(0);
 });

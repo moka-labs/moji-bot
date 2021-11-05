@@ -44,6 +44,6 @@ docker run -d --name discord-emoji-bot -e BOT_TOKEN=<BOT_TOKEN> discord-emoji-bo
 
 | package name   | version |
 | -------------- | ------- |
-| dotenv         | ^8.2.0  |
-| eris           | ^0.14.0 |
-| twemoji-parser | ^13.0.0 |
+| dotenv         | ^10.0.0  |
+| eris           | ^0.15.1 |
+| twemoji-parser | ^13.1.0 |
