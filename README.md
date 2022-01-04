@@ -39,11 +39,3 @@ CMD ["node", "dist/index.js"]
 docker build -t discord-emoji-bot:latest .
 docker run -d --name discord-emoji-bot -e BOT_TOKEN=<BOT_TOKEN> discord-emoji-bot:latest
 ```
-
-## 📦 Dependencies
-
-| package name   | version |
-| -------------- | ------- |
-| dotenv         | ^10.0.0  |
-| eris           | ^0.15.1 |
-| twemoji-parser | ^13.1.0 |
