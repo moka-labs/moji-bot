@@ -9,7 +9,8 @@ Resend the emoji to original size!<br/>
 ```shell
 npm ci
 npm run prepare
-npm run start 
+npm run build
+npm run start
 ```
 
 ## Deploy
