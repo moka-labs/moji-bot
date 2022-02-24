@@ -3,11 +3,11 @@ import Eris from 'eris';
 
 export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Message<Eris.PossiblyUncachedTextableChannel>) => {
   if (msg == null) return;
-  if (msg.member == null) return;
-  if (msg.guildID === undefined) return;
   if (msg.author.bot) return;
   if (msg.author === client.user) return;
   if (msg.attachments.length > 0) return;
+
+  console.info(msg.content);
 
   try {
     // 메세지 검사용 정규식
@@ -55,7 +55,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       };
 
       if (footer) embed.footer = { text: footer };
-      if (msg.member.roles.length > 0) {
+      if (msg.guildID && msg.member && msg.member.roles.length > 0) {
         const guild = msg.member.guild;
 
         const roles = msg.member.roles
@@ -78,7 +78,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       }
 
       // 개발중일 경우 메세지를 보내지않습니다.
-      if (process.env.NODE_ENV === 'production') {
+      // if (process.env.NODE_ENV === 'production') {
         const content = { embed };
         if (msg.messageReference) {
           (content as any).message_reference = {
@@ -88,10 +88,13 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
           };
         }
 
-        await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
+        if (msg.guildID === undefined) {
+          await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
+        }
+
         await client.createMessage(msg.channel.id, content);
       }
-    }
+    // }
   } catch (e) {
     console.error(e);
   }
