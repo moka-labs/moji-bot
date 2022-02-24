@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc",
     "serve": "node dist/index.js",
-    "start": "npm run serve"
+    "start": "npm run serve",
+    "prepare": "husky install"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
@@ -26,6 +27,16 @@
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "eslint": "^8.6.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.4",
     "typescript": "^4.5.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.ts": ["eslint --fix"]
   }
 }
