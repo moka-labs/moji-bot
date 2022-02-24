@@ -10,20 +10,6 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
   if (msg.attachments.length > 0) return;
 
   try {
-    // 봇을 호출하였을 경우 초대링크를 DM 으로 보내줍니다.
-    if (msg.content === `<@!${client.user.id}>`) {
-      await msg.delete();
-      const channel = await client.getDMChannel(msg.author.id);
-      await client.createMessage(channel.id, {
-        embed: {
-          color: 0xFCC21B,
-          title: 'Invite',
-          description: `https://discord.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=11264`,
-        },
-      });
-      return;
-    }
-
     // 메세지 검사용 정규식
     const regex = new RegExp('^<(a)?:(\\w+):(\\d{18})>$', 'g');
     const match = regex.exec(msg.content);
@@ -102,7 +88,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
           };
         }
 
-        await client.deleteMessage(msg.channel.id, msg.id);
+        await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
         await client.createMessage(msg.channel.id, content);
       }
     }
