@@ -16,5 +16,10 @@ module.exports = {
   plugins: [
     '@typescript-eslint'
   ],
-  rules: {}
+  rules: {
+    'no-unused-vars': ['error'],
+    'semi': ['error', 'always'],
+    'quotes': ['error', 'single'],
+    'eqeqeq': ['error', 'smart'],
+  }
 };
