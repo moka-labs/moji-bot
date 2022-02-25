@@ -3,7 +3,6 @@ import Eris from 'eris';
 import { readyHandler } from './handlers/ready';
 import { messageCreateHandler } from './handlers/message-create';
 import { interactionCreateHandler } from './handlers/interaction-create';
-import { commands } from './commands';
 
 export const app = async () => {
   const client = new Eris.Client(process.env.BOT_TOKEN ?? '');

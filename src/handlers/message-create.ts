@@ -7,8 +7,6 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
   if (msg.author === client.user) return;
   if (msg.attachments.length > 0) return;
 
-  console.info(msg.content);
-
   try {
     // 메세지 검사용 정규식
     const regex = new RegExp('^<(a)?:(\\w+):(\\d{18})>$', 'g');
@@ -27,10 +25,12 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       url += '?v=1';
 
       await client.requestHandler.request('GET', `/emojis/${emoji}/guild`, true)
-        .then((res: any) => {
-          footer = res.name as string;
+        .then((res) => {
+          footer = (res as { name: string }).name;
         }).catch(() => {
           footer = 'PRIVATE SERVER';
+        }).finally(() => {
+          if (!footer) footer = 'PRIVATE SERVER';
         });
     } else {
       const entities = parse(msg.content, { assetType: 'png' });
@@ -78,23 +78,16 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       }
 
       // 개발중일 경우 메세지를 보내지않습니다.
-      // if (process.env.NODE_ENV === 'production') {
-        const content = { embed };
-        if (msg.messageReference) {
-          (content as any).message_reference = {
-            message_id: msg.messageReference.messageID,
-            channel_id: msg.messageReference.channelID,
-            guild_id: msg.messageReference.guildID,
-          };
-        }
-
-        if (msg.guildID === undefined) {
-          await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
-        }
-
-        await client.createMessage(msg.channel.id, content);
+      const content: Eris.MessageContent = { embed };
+      if (msg.messageReference && msg.messageReference.messageID) {
+        content.messageReference = {
+          messageID: msg.messageReference.messageID,
+        };
       }
-    // }
+
+      if (msg.guildID) await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
+      await client.createMessage(msg.channel.id, content);
+    }
   } catch (e) {
     console.error(e);
   }
