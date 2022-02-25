@@ -1,4 +1,4 @@
-import Eris, { CommandInteraction } from 'eris';
+import Eris, { CommandInteraction, InteractionDataOptionsInteger } from 'eris';
 
 export const interactionCreateHandler = async (client: Eris.Client, interaction: Eris.Interaction) => {
   if (!(interaction instanceof CommandInteraction)) {
@@ -14,5 +14,11 @@ export const interactionCreateHandler = async (client: Eris.Client, interaction:
         description,
       }]
     });
+  } else if (command.data.name === 'roll') {
+    const options = (command.data.options ?? []) as InteractionDataOptionsInteger[];
+    const min = options.find(opt => opt.name === 'min')?.value ?? 0;
+    let max = options.find(opt => opt.name === 'max')?.value ?? min + 100;
+    if (min > max) max = min + 100;
+    await command.createMessage('🎲 **' + (Math.floor(Math.random() * (max - min + 1)) + min) + '**');
   }
 };
