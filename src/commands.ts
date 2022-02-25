@@ -9,4 +9,4 @@ export const commands = async (client: Eris.Client) => {
       defaultPermission: true
     })
   ]);
-}
+};
