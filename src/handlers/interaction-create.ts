@@ -1,4 +1,6 @@
 import Eris, { CommandInteraction, InteractionDataOptionsInteger } from 'eris';
+import emojis from 'emojis-list';
+import { parse } from 'twemoji-parser';
 
 export const interactionCreateHandler = async (client: Eris.Client, interaction: Eris.Interaction) => {
   if (!(interaction instanceof CommandInteraction)) {
@@ -20,5 +22,29 @@ export const interactionCreateHandler = async (client: Eris.Client, interaction:
     let max = options.find(opt => opt.name === 'max')?.value ?? min + 100;
     if (min > max) max = min + 100;
     await command.createMessage('🎲 **' + (Math.floor(Math.random() * (max - min + 1)) + min) + '**');
+  } else if (command.data.name === 'random') {
+    const user = command.member || command.user;
+
+    const emoji = emojis[Math.floor(emojis.length * Math.random())];
+    const entities = parse(emoji, { assetType: 'png' });
+    if (entities.length > 0 && user) {
+      const entity = entities[0];
+      const embed: Omit<Eris.Embed, 'type'> & Partial<Pick<Eris.Embed, 'type'>> = {
+        author: {
+          name: `${user.username}#${user.discriminator}`,
+          icon_url: user.avatarURL,
+          url: `https://discordapp.com/users/${user.id}`,
+        },
+        image: { url: entity.url },
+        color: 0xFCC21B,
+      };
+      await command.createMessage({ embeds: [embed] });
+    } else {
+      await command.createMessage({ embeds: [{
+        color: 0xFCC21B,
+        title: '🚫 ERROR',
+        description: entities.length === 0 ? 'unknown emoji' : 'user not found.',
+      }]});
+    }
   }
 };
