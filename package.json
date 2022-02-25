@@ -15,7 +15,8 @@
     "serve": "node dist/index.js",
     "start": "npm run serve",
     "prepare": "husky install",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
