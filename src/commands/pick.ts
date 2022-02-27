@@ -1,22 +1,28 @@
-import { Client, CommandInteraction } from 'eris';
+import { Client, CommandInteraction, InteractionDataOptionsBoolean } from 'eris';
 
 export async function pickCommand(client: Client, command: CommandInteraction) {
-  if (command.guildID && command.member?.guild) {
-    const guild = command.member.guild;
-    const member = guild.members.random();
+  const options = (command.data.options ?? []) as InteractionDataOptionsBoolean[];
+  const mention = options.find(opt => opt.name === 'mention')?.value ?? false;
+  const user = command.user || command.member;
 
-    if (member) {
-      await command.createMessage('🎲 **' + member.mention + '**');
-    } else {
-      await command.createMessage('🚫 **No members found.**');
+  let message: string | undefined;
+  if (user) {
+    message = user.username;
+    if (mention) message = user.mention;
+
+    if (command.guildID && command.member?.guild) {
+      const guild = command.member.guild;
+      const member = guild.members.random();
+      if (member) {
+        message = member.username;
+        if (mention) message = member.mention;
+      }
     }
+  }
+
+  if (message) {
+    await command.createMessage('🎲 **' + message + '**');
   } else {
-    await command.createMessage({
-      embeds: [{
-        color: 0xFF0000,
-        title: '🚫 ERROR',
-        description: 'This command is only available in guilds.',
-      }]
-    });
+    await command.createMessage('🚫 **No members found.**');
   }
 }
