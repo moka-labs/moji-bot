@@ -9,8 +9,7 @@ Resend the emoji to original size!<br/>
 ```shell
 npm ci
 npm run prepare
-npm run build
-npm run start
+npm run dev
 ```
 
 ## Deploy
@@ -20,3 +19,17 @@ npm ci
 npm run build
 npm run start
 ```
+
+## Bot Setup
+### Intents
+* Presence intent: enabled
+* Server members intent: enabled
+* Message content intent: enabled
+### OAuth2 Scopes
+* bot
+* applications.command
+### OAuth2 Permissions
+* Manage Messages
+* Manage Threads
+* Send Messages
+* Send Messages in Threads
