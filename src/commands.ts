@@ -29,9 +29,6 @@ export const commands = async (client: Eris.Client) => {
       description: 'pick random user',
       type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
       defaultPermission: true,
-      options: [
-        { name: 'mention', type: Constants.ApplicationCommandOptionTypes.BOOLEAN, description: 'mention user' }
-      ]
     }),
   ]);
 };
