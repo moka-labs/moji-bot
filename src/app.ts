@@ -5,7 +5,7 @@ import { messageCreateHandler } from './handlers/message-create';
 import { interactionCreateHandler } from './handlers/interaction-create';
 
 export const app = async () => {
-  const client = new Eris.Client(process.env.BOT_TOKEN ?? '', { intents: ['guilds', 'guildMembers']});
+  const client = new Eris.Client(process.env.BOT_TOKEN ?? '', { intents: ['guilds', 'guildMembers', 'guildMessages', 'guildMessageReactions', 'directMessages', 'directMessageReactions']});
 
   client.on('ready', () => readyHandler(client));
   client.on('messageCreate', (msg) => messageCreateHandler(client, msg));
