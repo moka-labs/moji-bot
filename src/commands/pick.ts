@@ -12,7 +12,9 @@ export async function pickCommand(client: Client, command: CommandInteraction) {
 
     if (command.guildID && command.member?.guild) {
       const guild = command.member.guild;
-      const member = guild.members.random();
+      const members = await guild.fetchMembers();
+      const member = members[Math.floor(Math.random() * members.length)];
+
       if (member) {
         message = member.username;
         if (mention) message = member.mention;
