@@ -30,5 +30,11 @@ export const commands = async (client: Eris.Client) => {
       type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
       defaultPermission: true,
     }),
+    client.createCommand({
+      name: 'github',
+      description: 'github repository url',
+      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      defaultPermission: true,
+    }),
   ]);
 };

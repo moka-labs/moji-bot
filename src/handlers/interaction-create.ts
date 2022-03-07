@@ -1,4 +1,5 @@
 import Eris, { CommandInteraction } from 'eris';
+import { githubCommand } from '../commands/github';
 
 import { inviteCommand } from '../commands/invite';
 import { rollCommand } from '../commands/roll';
@@ -23,6 +24,9 @@ export const interactionCreateHandler = async (client: Eris.Client, interaction:
     break;
   case 'pick':
     await pickCommand(client, command);
+    break;
+  case 'github':
+    await githubCommand(client, command);
     break;
   }
 };
