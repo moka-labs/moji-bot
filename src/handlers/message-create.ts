@@ -86,7 +86,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       }
 
       if (msg.guildID) await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
-      await client.createMessage(msg.channel.id, content);
+      await client.createMessage(msg.channel.id, content).catch(console.error);
     }
   } catch (e) {
     console.error(e);
