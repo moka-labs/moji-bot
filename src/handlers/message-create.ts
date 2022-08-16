@@ -9,7 +9,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
 
   try {
     // 메세지 검사용 정규식
-    const regex = new RegExp('^<(a)?:(\\w+):(\\d{18})>$', 'g');
+    const regex = new RegExp('^<(a)?:(\\w+):(\\d+)>$', 'g');
     const match = regex.exec(msg.content);
 
     let url: string | undefined;
