@@ -21,7 +21,7 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
 
       url = `https://cdn.discordapp.com/emojis/${match[3]}.`;
       if (animated) url += 'gif';
-      else url += 'png';
+      else url += 'webp';
       url += '?v=1';
 
       await client.requestHandler.request('GET', `/emojis/${emoji}/guild`, true)
