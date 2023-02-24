@@ -64,22 +64,21 @@ export const messageCreateHandler = async (
 
         // resize to if width < 128 or height < 128
         const imageSize = 128;
-        const metadata = await image.metadata();
-        if (metadata.width !== undefined && metadata.height !== undefined) {
-          if (metadata.width < imageSize && metadata.height < imageSize) {
-            // 두개다 128보다 작을 경우 더 큰쪽을 128으로 맞춥니다.
-            const bigger = Math.max(metadata.width, metadata.height);
-            const multiplier = imageSize / bigger;
-            buffer = await image
-              .resize(
-                Math.round(metadata.width * multiplier),
-                Math.round(metadata.height * multiplier)
-              )
-              .toBuffer();
-            resized = true;
-          }
-        } else {
-          console.error('metadata.width or metadata.height is undefined');
+        const { info } = await image
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+
+        if (info.width < imageSize && info.height < imageSize) {
+          // 두개다 128보다 작을 경우 더 큰쪽을 128으로 맞춥니다.
+          const bigger = Math.max(info.width, info.height);
+          const multiplier = imageSize / bigger;
+          buffer = await image
+            .resize(
+              Math.round(info.width * multiplier),
+              Math.round(info.height * multiplier)
+            )
+            .toBuffer();
+          resized = true;
         }
       } catch (err) {
         console.error('file resize error:', err);
