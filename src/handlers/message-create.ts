@@ -60,11 +60,10 @@ export const messageCreateHandler = async (
       try {
         const original = await fetch(url).then((res) => res.arrayBuffer());
         buffer = Buffer.from(original);
-        const image = await sharp(buffer, { animated });
 
         // resize to if width < 128 or height < 128
         const imageSize = 128;
-        const { info } = await image
+        const { info } = await sharp(buffer)
           .raw()
           .toBuffer({ resolveWithObject: true });
 
@@ -72,12 +71,17 @@ export const messageCreateHandler = async (
           // 두개다 128보다 작을 경우 더 큰쪽을 128으로 맞춥니다.
           const bigger = Math.max(info.width, info.height);
           const multiplier = imageSize / bigger;
-          buffer = await image
-            .resize(
-              Math.round(info.width * multiplier),
-              Math.round(info.height * multiplier)
-            )
-            .toBuffer();
+          const image = sharp(buffer).resize(
+            Math.round(info.width * multiplier),
+            Math.round(info.height * multiplier)
+          );
+
+          if (animated) {
+            buffer = await image.gif().toBuffer();
+          } else {
+            buffer = await image.webp().toBuffer();
+          }
+
           resized = true;
         }
       } catch (err) {
@@ -120,10 +124,12 @@ export const messageCreateHandler = async (
 
       const fileContent: Eris.FileContent[] = [];
       if (resized && buffer !== undefined) {
-        embed.image = { url: `attachment://image.${animated ? 'gif' : 'png'}` };
+        embed.image = {
+          url: `attachment://image.${animated ? 'gif' : 'webp'}`,
+        };
         fileContent.push({
           file: buffer,
-          name: `image.${animated ? 'gif' : 'png'}`,
+          name: `image.${animated ? 'gif' : 'webp'}`,
         });
       }
 
