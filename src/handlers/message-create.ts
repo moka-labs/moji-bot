@@ -1,7 +1,12 @@
-import { parse } from 'twemoji-parser';
+import fetch from 'cross-fetch';
 import Eris from 'eris';
+import sharp from 'sharp';
+import { parse } from 'twemoji-parser';
 
-export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Message<Eris.PossiblyUncachedTextableChannel>) => {
+export const messageCreateHandler = async (
+  client: Eris.Client,
+  msg: Eris.Message<Eris.PossiblyUncachedTextableChannel>
+) => {
   if (msg == null) return;
   if (msg.author.bot) return;
   if (msg.author === client.user) return;
@@ -14,9 +19,10 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
 
     let url: string | undefined;
     let footer: string | undefined;
+    let animated = false;
 
     if (match) {
-      const animated = match[1] !== undefined;
+      animated = match[1] !== undefined;
       const emoji = match[3];
 
       url = `https://cdn.discordapp.com/emojis/${match[3]}.`;
@@ -24,12 +30,15 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       else url += 'webp';
       url += '?v=1';
 
-      await client.requestHandler.request('GET', `/emojis/${emoji}/guild`, true)
+      await client.requestHandler
+        .request('GET', `/emojis/${emoji}/guild`, true)
         .then((res) => {
           footer = (res as { name: string }).name;
-        }).catch(() => {
+        })
+        .catch(() => {
           footer = 'PRIVATE SERVER';
-        }).finally(() => {
+        })
+        .finally(() => {
           if (!footer) footer = 'PRIVATE SERVER';
         });
     } else {
@@ -43,9 +52,41 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
       }
     }
 
-    // URL 이 있을 경우
+    // URL 이 있을 경우 메세지를 처리합니다.
     if (url) {
-      const embed: Omit<Eris.Embed, 'type'> & Partial<Pick<Eris.Embed, 'type'>> = {
+      let resized = false;
+      let buffer: Buffer | undefined = undefined;
+
+      try {
+        const original = await fetch(url).then((res) => res.arrayBuffer());
+        buffer = Buffer.from(original);
+        const image = await sharp(buffer, { animated });
+
+        // resize to if width < 128 or height < 128
+        const imageSize = 128;
+        const metadata = await image.metadata();
+        if (metadata.width !== undefined && metadata.height !== undefined) {
+          if (metadata.width < imageSize && metadata.height < imageSize) {
+            // 두개다 128보다 작을 경우 더 큰쪽을 128으로 맞춥니다.
+            const bigger = Math.max(metadata.width, metadata.height);
+            const multiplier = imageSize / bigger;
+            buffer = await image
+              .resize(
+                Math.round(metadata.width * multiplier),
+                Math.round(metadata.height * multiplier)
+              )
+              .toBuffer();
+            resized = true;
+          }
+        } else {
+          console.error('metadata.width or metadata.height is undefined');
+        }
+      } catch (err) {
+        console.error('file resize error:', err);
+      }
+
+      const embed: Omit<Eris.Embed, 'type'> &
+        Partial<Pick<Eris.Embed, 'type'>> = {
         author: {
           name: `${msg.author.username}#${msg.author.discriminator}`,
           icon_url: msg.author.avatarURL,
@@ -59,15 +100,16 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
         const guild = msg.member.guild;
 
         const roles = msg.member.roles
-          .map(role => guild.roles.get(role))
+          .map((role) => guild.roles.get(role))
           .filter((role): role is Eris.Role => role != null)
-          .filter(role => role.color !== 0);
+          .filter((role) => role.color !== 0);
 
         // 배열이 1개 이상일 경우 작동
         if (roles.length > 0) {
           const role = roles.reduce((prev, curr) => {
             if (!prev) return curr;
-            if (curr.position === prev.position) return prev.id > curr.id ? prev : curr;
+            if (curr.position === prev.position)
+              return prev.id > curr.id ? prev : curr;
             else return curr.position > prev.position ? curr : prev;
           });
 
@@ -75,6 +117,15 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
             embed.color = role.color;
           }
         }
+      }
+
+      const fileContent: Eris.FileContent[] = [];
+      if (resized && buffer !== undefined) {
+        embed.image = { url: `attachment://image.${animated ? 'gif' : 'png'}` };
+        fileContent.push({
+          file: buffer,
+          name: `image.${animated ? 'gif' : 'png'}`,
+        });
       }
 
       // 개발중일 경우 메세지를 보내지않습니다.
@@ -85,8 +136,11 @@ export const messageCreateHandler = async (client: Eris.Client, msg: Eris.Messag
         };
       }
 
-      if (msg.guildID) await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
-      await client.createMessage(msg.channel.id, content).catch(console.error);
+      if (msg.guildID)
+        await client.deleteMessage(msg.channel.id, msg.id).catch(console.error);
+      await client
+        .createMessage(msg.channel.id, content, fileContent)
+        .catch(console.error);
     }
   } catch (e) {
     console.error(e);
