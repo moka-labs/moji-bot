@@ -21,22 +21,18 @@ export async function statusCommand(client: Client, command: CommandInteraction)
           {
             name: 'Uptime',
             value: uptimeString,
-            inline: true,
           },
           {
             name: 'Ping',
             value: ping + ' ms',
-            inline: true,
           },
           {
             name: 'Shards',
             value: `${shardCount} / ${maxShardCount}`,
-            inline: true,
           },
           {
             name: 'Guilds',
             value: `${guildCount}`,
-            inline: true,
           },
         ],
       },
