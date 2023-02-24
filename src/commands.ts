@@ -6,7 +6,7 @@ export const commands = async (client: Eris.Client) => {
       name: 'invite',
       description: 'bot invite url',
       type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-      defaultPermission: true
+      defaultPermission: true,
     }),
     client.createCommand({
       name: 'roll',
@@ -15,14 +15,14 @@ export const commands = async (client: Eris.Client) => {
       defaultPermission: true,
       options: [
         { name: 'min', type: Constants.ApplicationCommandOptionTypes.INTEGER, description: 'min value' },
-        { name: 'max', type: Constants.ApplicationCommandOptionTypes.INTEGER, description: 'max value' }
-      ]
+        { name: 'max', type: Constants.ApplicationCommandOptionTypes.INTEGER, description: 'max value' },
+      ],
     }),
     client.createCommand({
       name: 'random',
       description: 'random emoji',
       type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-      defaultPermission: true
+      defaultPermission: true,
     }),
     client.createCommand({
       name: 'pick',
@@ -33,6 +33,12 @@ export const commands = async (client: Eris.Client) => {
     client.createCommand({
       name: 'github',
       description: 'github repository url',
+      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      defaultPermission: true,
+    }),
+    client.createCommand({
+      name: 'status',
+      description: 'bot status',
       type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
       defaultPermission: true,
     }),
