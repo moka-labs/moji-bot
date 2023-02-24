@@ -71,7 +71,7 @@ export const messageCreateHandler = async (
           // 두개다 128보다 작을 경우 더 큰쪽을 128으로 맞춥니다.
           const bigger = Math.max(info.width, info.height);
           const multiplier = imageSize / bigger;
-          const image = sharp(buffer).resize(
+          const image = sharp(buffer, { animated }).resize(
             Math.round(info.width * multiplier),
             Math.round(info.height * multiplier)
           );
