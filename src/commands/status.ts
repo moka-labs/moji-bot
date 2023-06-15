@@ -24,7 +24,7 @@ export async function statusCommand(client: Client, command: CommandInteraction)
           },
           {
             name: 'Ping',
-            value: ping + ' ms',
+            value: (ping === Infinity ? 0 : ping) + ' ms',
           },
           {
             name: 'Shards',
