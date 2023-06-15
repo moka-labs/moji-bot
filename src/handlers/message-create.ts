@@ -89,7 +89,7 @@ export const messageCreateHandler = async (
       }
 
       let name = msg.author.username;
-      if (msg.author.discriminator) name += `#${msg.author.discriminator}`;
+      if (msg.author.discriminator !== '0') name += `#${msg.author.discriminator}`;
 
       const embed: Omit<Eris.Embed, 'type'> &
         Partial<Pick<Eris.Embed, 'type'>> = {
