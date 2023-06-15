@@ -88,10 +88,13 @@ export const messageCreateHandler = async (
         console.error('file resize error:', err);
       }
 
+      let name = msg.author.username;
+      if (msg.author.discriminator) name += `#${msg.author.discriminator}`;
+
       const embed: Omit<Eris.Embed, 'type'> &
         Partial<Pick<Eris.Embed, 'type'>> = {
         author: {
-          name: `${msg.author.username}#${msg.author.discriminator}`,
+          name,
           icon_url: msg.author.avatarURL,
           url: `https://discordapp.com/users/${msg.author.id}`,
         },
@@ -133,8 +136,8 @@ export const messageCreateHandler = async (
         });
       }
 
-      // 개발중일 경우 메세지를 보내지않습니다.
       const content: Eris.MessageContent = { embed };
+
       if (msg.messageReference && msg.messageReference.messageID) {
         content.messageReference = {
           messageID: msg.messageReference.messageID,
